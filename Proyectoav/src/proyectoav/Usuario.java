@@ -9,21 +9,32 @@ package proyectoav;
  * @author Javier Reyes
  */
 public class Usuario {
-    private String correo;
-    private String contrasena;
-    private String apodo;
-    private int numeroAleatorio;
+   private String correo;
+        private String contrasena;
+        private String apodo;
+        private int numeroAleatorio;
 
-    public Usuario(String correo, String contrasena, String apodo, int numeroAleatorio) {
-        this.correo = correo;
-        this.contrasena = contrasena;
-        this.apodo = apodo;
-        this.numeroAleatorio = numeroAleatorio;
-    }
+        public Usuario(String correo, String contrasena, String apodo, int numeroAleatorio) {
+            this.correo = correo;
+            this.contrasena = contrasena;
+            this.apodo = apodo;
+            this.numeroAleatorio = numeroAleatorio;
+        }
 
-    @Override
-    public String toString() {
-        return "Correo: " + correo + "\nContraseña: " + contrasena + "\nApodo: " + apodo +
-                "\nNúmero Aleatorio: " + numeroAleatorio;
-    }
+        public String getCorreo() {
+            return correo;
+        }
+
+        public String getContrasena() {
+            return contrasena;
+        }
+        public String getApodo() {
+            return apodo;
+        }
+
+        @Override
+        public String toString() {
+            return "Correo: " + correo + "\nContraseña: " + contrasena + "\nApodo: " + apodo +
+                    "\nId único: " + numeroAleatorio;
+        }    
 }

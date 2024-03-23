@@ -9,49 +9,92 @@ Javier Reyes 12111252
 Jose Alvarez 12341120
 */
 package proyectoav;
-import java.util.Scanner;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
+import proyectoav.Practical_labs_progra;
 
 public class Proyectoav {
+    private static ArrayList<Usuario> usuarios = new ArrayList<>();
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
-        // Crear usuario
-        Usuario usuario = crearUsuario(scanner);
 
-        // Mostrar el menú de juegos
-        boolean salir = false;
-        while (!salir) {
-            System.out.println("Menú de Juegos");
-            System.out.println("1. Buscaminas");
-            System.out.println("2. Laberinto");
-            System.out.println("3. Connect 4");
-            System.out.println("4. Juego de cartas");
-            System.out.println("5. Salir");
-            System.out.print("Selecciona el juego que deseas jugar: ");
+        boolean nuevoUsuario = true;
+        Usuario usuario = null;
 
-            int opcion = scanner.nextInt();
-            scanner.nextLine(); // Consumir el salto de línea después del número
+        while (nuevoUsuario) {
+            System.out.println("\n¿Desea ingresar con un nuevo usuario y ver la lista de usuarios? (no/si): ");
+            String respuesta = scanner.nextLine().toLowerCase();
 
-            switch (opcion) {
-                case 1:
-                    jugarBuscaminas();
-                    break;
-                case 2:
-                    jugarLaberinto();
-                    break;
-                case 3:
-                    connect();
-                    break;
-                case 4:
-                    jugarJuegoDeCartas(scanner);
-                    break;
-                case 5:
-                    System.out.println("Gracias por jugar");
-                    salir = true;
-                    break;
-                default:
-                    System.out.println("Opción no válida.");
+            if (respuesta.equals("no")) {
+                nuevoUsuario = false;
+                System.out.println("¡Hasta luego!");
+            } else if (respuesta.equals("si")) {
+                mostrarUsuarios();
+                usuario = null; // Reiniciar el usuario actual para ingresar uno nuevo
+            } else {
+                System.out.println("Opción no válida. Por favor, ingrese 'no' para salir o 'si' para ingresar con un nuevo usuario y ver la lista de usuarios.");
+            }
+
+            if (usuario == null) {
+                usuario = crearUsuario(scanner);
+                usuarios.add(usuario);
+            }
+
+            // Mostrar el menú de juegos
+            boolean salir = false;
+            while (!salir) {
+                System.out.println("Menú de Juegos");
+                System.out.println("1. Buscaminas");
+                System.out.println("2. Laberinto");
+                System.out.println("3. Connect 4");
+                System.out.println("4. Juego de cartas");
+                System.out.println("5. Ajedrez");
+                System.out.println("6. Salir");
+                System.out.print("Selecciona el juego que deseas jugar: ");
+
+                int opcion = scanner.nextInt();
+                scanner.nextLine(); // Consumir el salto de línea después del número
+
+                switch (opcion) {
+                    case 1:
+                        jugarBuscaminas();
+                        break;
+                    case 2:
+                        jugarLaberinto();
+                        break;
+                    case 3:
+                        connect();
+                        break;
+                    case 4:
+                        jugarJuegoDeCartas(scanner);
+                        break;
+                    case 5:
+                        jugarPracticalLabsProgra();
+                        break;
+                    case 6:
+                        System.out.println("Gracias por jugar");
+                        salir = true;
+                        break;
+                    default:
+                        System.out.println("Opción no válida.");
+                }
+            }
+
+            System.out.println("\n¿Desea ingresar con un nuevo usuario? (s/n): ");
+            respuesta = scanner.nextLine().toLowerCase();
+
+            if (respuesta.equals("si")) {
+                // No es necesario hacer nada, el ciclo continuará y preguntará al usuario si es existente
+            } else if (respuesta.equals("no")) {
+                nuevoUsuario = false;
+                System.out.println("¡Hasta luego!");
+            } else {
+                System.out.println("Opción no válida. Por favor, ingrese 's' para un usuario existente o 'n' para un nuevo usuario.");
+                nuevoUsuario = false; // Terminar el programa si la opción es inválida
             }
         }
 
@@ -63,6 +106,14 @@ public class Proyectoav {
 
         System.out.println("Ingrese su correo electrónico:");
         String correo = scanner.nextLine();
+
+        // Verificar si el correo ya está registrado
+        for (Usuario u : usuarios) {
+            if (u.getCorreo().equals(correo)) {
+                System.out.println("El correo ingresado ya está registrado. Por favor, inicia sesión.");
+                return null;
+            }
+        }
 
         System.out.println("Ingrese su contraseña:");
         String contrasena = scanner.nextLine();
@@ -79,6 +130,37 @@ public class Proyectoav {
 
         return usuario;
     }
+    
+    public static Usuario ingresarUsuario(Scanner scanner) {
+        System.out.println("Ingrese su correo electrónico:");
+        String correo = scanner.nextLine();
+
+        System.out.println("Ingrese su contraseña:");
+        String contrasena = scanner.nextLine();
+
+        // Verificar si el usuario existe en la lista de usuarios
+        for (Usuario u : usuarios) {
+            if (u.getCorreo().equals(correo) && u.getContrasena().equals(contrasena)) {
+                System.out.println("\n¡Inicio de sesión exitoso!");
+                return u;
+            }
+        }
+
+        System.out.println("Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.");
+        return null;
+    }
+    
+    public static void mostrarUsuarios() {
+        if (usuarios.isEmpty()) {
+            System.out.println("No hay usuarios registrados.");
+        } else {
+            System.out.println("Lista de usuarios registrados:");
+            for (Usuario u : usuarios) {
+                System.out.println(u.getApodo());
+            }
+        }
+    }
+
 
     public static void jugarBuscaminas() {
         Buscaminas buscaminas = new Buscaminas(5, 5, 5);
@@ -118,10 +200,11 @@ public class Proyectoav {
         JuegoCartas juegoCartas = new JuegoCartas(scanner);
         juegoCartas.jugar();
     }
-   
-    /*public static void jugarAjedrez() {
-        Practical_labs_progra juegoAjedrez = new Practical_labs_progra();
-        juegoAjedrez.startGame();
-    }*/
+
+    public static void jugarPracticalLabsProgra() {
+        Practical_labs_progra labsProgra = new Practical_labs_progra();
+        labsProgra.startGame();
+    }
 }
+
 
